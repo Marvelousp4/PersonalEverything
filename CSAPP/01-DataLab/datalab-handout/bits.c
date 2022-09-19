@@ -141,10 +141,11 @@ NOTES:
  *   Max ops: 14
  *   Rating: 1
  */
-int bitXor(int x, int y) {
-  int notand = ~(x & y);
-  int or = ~(~x & ~y);
-  return notand & or ;
+int bitXor(int x, int y)
+{
+    int notand = ~(x & y);
+    int or = ~(~x & ~y);
+    return notand & or ;
 }
 /*
  * tmin - return minimum two's complement integer
@@ -152,8 +153,9 @@ int bitXor(int x, int y) {
  *   Max ops: 4
  *   Rating: 1
  */
-int tmin(void) {
-  return 1 << 31; // TMIN = 1000000000000000000000000000000000000
+int tmin(void)
+{
+    return 1 << 31; // TMIN = 1000000000000000000000000000000000000
 }
 // 2
 /*
@@ -163,9 +165,10 @@ int tmin(void) {
  *   Max ops: 10
  *   Rating: 1
  */
-int isTmax(int x) {
-  int a = x + 1;                  // TMIN = TMAX + 1
-  return !((~a + 1) ^ a) & (!!a); // TMIN = - TMIN  因为0 = -0
+int isTmax(int x)
+{
+    int a = x + 1; // TMIN = TMAX + 1
+    return !((~a + 1) ^ a) & (!!a); // TMIN = - TMIN  因为0 = -0
 }
 /*
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
@@ -175,10 +178,11 @@ int isTmax(int x) {
  *   Max ops: 12
  *   Rating: 2
  */
-int allOddBits(int x) {
-  int detect = 0xAAAAAAAA;
-  int tmp = x | detect; // 与操作会保留大部分数，除了两个0
-  return (tmp & x);     // 异或操作可以判断两个位是否不等
+int allOddBits(int x)
+{
+    int detect = 0xAAAAAAAA;
+    int tmp = x | detect; // 与操作会保留大部分数，除了两个0
+    return (tmp & x); // 异或操作可以判断两个位是否不等
 }
 /*
  * negate - return -x
@@ -197,7 +201,12 @@ int negate(int x) { return ~x + 1; }
  *   Max ops: 15
  *   Rating: 3
  */
-int isAsciiDigit(int x) { return 2; }
+// 通过加补码的方式实现减法，然后右移31位查看符号位
+int isAsciiDigit(int x)
+{
+    int left = 0x30, right = 0x39;
+    return (!(((x + (~left + 1))) >> 31)) & (!(((right + (~x + 1))) >> 31));
+}
 /*
  * conditional - same as x ? y : z
  *   Example: conditional(2,4,5) = 4
@@ -205,7 +214,15 @@ int isAsciiDigit(int x) { return 2; }
  *   Max ops: 16
  *   Rating: 3
  */
-int conditional(int x, int y, int z) { return 2; }
+int conditional(int x, int y, int z)
+{
+    // 补码右移补1，比如2和 - 2，左移后都是100000000000000000000
+    // 于是就变成了全1或者全0
+    int mask = !x << 31 >> 31;
+
+    // 如果mask为全1，则选择z，如果mask为全0，则为y。
+    return (mask & z) + ((!mask) & y);
+}
 /*
  * isLessOrEqual - if x <= y  then return 1, else return 0
  *   Example: isLessOrEqual(4,5) = 1.
@@ -213,7 +230,10 @@ int conditional(int x, int y, int z) { return 2; }
  *   Max ops: 24
  *   Rating: 3
  */
-int isLessOrEqual(int x, int y) { return 2; }
+int isLessOrEqual(int x, int y)
+{
+    return (y + (~x + 1)) >> 31;
+}
 // 4
 /*
  * logicalNeg - implement the ! operator, using all of
@@ -223,7 +243,11 @@ int isLessOrEqual(int x, int y) { return 2; }
  *   Max ops: 12
  *   Rating: 4
  */
-int logicalNeg(int x) { return 2; }
+int logicalNeg(int x)
+{
+    // 0的相反数还是0，其他的数字，要么自己，要么相反数最高位为1，就能由此判断
+    return (~(x | (~x + 1)) >> 31) & 1;
+}
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
  *  Examples: howManyBits(12) = 5
@@ -236,7 +260,26 @@ int logicalNeg(int x) { return 2; }
  *  Max ops: 90
  *  Rating: 4
  */
-int howManyBits(int x) { return 0; }
+
+int howManyBits(int x)
+{
+    int b16, b8, b4, b2, b1, b0;
+    int sign = x >> 31;
+    x = (sign & ~x) | (~sign & x); // 如果x为正则不变，否则按位取反（这样好找最高位为1的，原来是最高位为0的，这样也将符号位去掉了）
+    // 不断缩小范围
+    b16 = !!(x >> 16) << 4; // 高十六位是否有1
+    x = x >> b16; // 如果有（至少需要16位），则将原数右移16位
+    b8 = !!(x >> 8) << 3; //剩余位高8位是否有1
+    x = x >> b8; // 如果有（至少需要16+8=24位），则右移8位
+    b4 = !!(x >> 4) << 2; // 同理
+    x = x >> b4;
+    b2 = !!(x >> 2) << 1;
+    x = x >> b2;
+    b1 = !!(x >> 1);
+    x = x >> b1;
+    b0 = x;
+    return b16 + b8 + b4 + b2 + b1 + b0 + 1; //+1表示加上符号位
+}
 // float
 /*
  * floatScale2 - Return bit-level equivalent of expression 2*f for
@@ -249,7 +292,9 @@ int howManyBits(int x) { return 0; }
  *   Max ops: 30
  *   Rating: 4
  */
-unsigned floatScale2(unsigned uf) { return 2; }
+unsigned floatScale2(unsigned uf)
+{
+}
 /*
  * floatFloat2Int - Return bit-level equivalent of expression (int) f
  *   for floating point argument f.
@@ -262,7 +307,9 @@ unsigned floatScale2(unsigned uf) { return 2; }
  *   Max ops: 30
  *   Rating: 4
  */
-int floatFloat2Int(unsigned uf) { return 2; }
+int floatFloat2Int(unsigned uf)
+{
+}
 /*
  * floatPower2 - Return bit-level equivalent of the expression 2.0^x
  *   (2.0 raised to the power x) for any 32-bit integer x.
@@ -276,4 +323,6 @@ int floatFloat2Int(unsigned uf) { return 2; }
  *   Max ops: 30
  *   Rating: 4
  */
-unsigned floatPower2(int x) { return 2; }
+unsigned floatPower2(int x)
+{
+}
