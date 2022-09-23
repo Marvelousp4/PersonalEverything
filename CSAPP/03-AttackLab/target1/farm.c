@@ -19,22 +19,22 @@ unsigned addval_219(unsigned x)
     return x + 2421715793U;
 }
 
-void setval_237(unsigned *p)
+void setval_237(unsigned* p)
 {
     *p = 3351742792U;
 }
 
-void setval_424(unsigned *p)
+void setval_424(unsigned* p)
 {
     *p = 2455290452U;
 }
 
-void setval_470(unsigned *p)
+void setval_470(unsigned* p)
 {
     *p = 3347925091U;
 }
 
-void setval_426(unsigned *p)
+void setval_426(unsigned* p)
 {
     *p = 2428995912U;
 }
@@ -53,7 +53,7 @@ int mid_farm()
 /* Add two arguments */
 long add_xy(long x, long y)
 {
-    return x+y;
+    return x + y;
 }
 
 unsigned getval_481()
@@ -61,7 +61,7 @@ unsigned getval_481()
     return 2428668252U;
 }
 
-void setval_296(unsigned *p)
+void setval_296(unsigned* p)
 {
     *p = 2425409945U;
 }
@@ -81,7 +81,7 @@ unsigned getval_226()
     return 3225997705U;
 }
 
-void setval_384(unsigned *p)
+void setval_384(unsigned* p)
 {
     *p = 3229929857U;
 }
@@ -91,7 +91,7 @@ unsigned addval_190(unsigned x)
     return x + 3767093313U;
 }
 
-void setval_276(unsigned *p)
+void setval_276(unsigned* p)
 {
     *p = 3372794504U;
 }
@@ -116,7 +116,7 @@ unsigned addval_187(unsigned x)
     return x + 3224948361U;
 }
 
-void setval_248(unsigned *p)
+void setval_248(unsigned* p)
 {
     *p = 3674787457U;
 }
@@ -151,7 +151,7 @@ unsigned getval_155()
     return 3385115273U;
 }
 
-void setval_299(unsigned *p)
+void setval_299(unsigned* p)
 {
     *p = 2447411528U;
 }
@@ -166,17 +166,17 @@ unsigned getval_311()
     return 3674788233U;
 }
 
-void setval_167(unsigned *p)
+void setval_167(unsigned* p)
 {
     *p = 3281113481U;
 }
 
-void setval_328(unsigned *p)
+void setval_328(unsigned* p)
 {
     *p = 3526935169U;
 }
 
-void setval_450(unsigned *p)
+void setval_450(unsigned* p)
 {
     *p = 3372797449U;
 }
@@ -196,7 +196,7 @@ unsigned getval_169()
     return 3223375496U;
 }
 
-void setval_181(unsigned *p)
+void setval_181(unsigned* p)
 {
     *p = 3269495112U;
 }
@@ -211,7 +211,7 @@ unsigned getval_472()
     return 3525365389U;
 }
 
-void setval_350(unsigned *p)
+void setval_350(unsigned* p)
 {
     *p = 2430634312U;
 }
